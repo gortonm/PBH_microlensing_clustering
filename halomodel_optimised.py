@@ -9,7 +9,7 @@ Created on Fri Apr 23 15:51:17 2021
 import numpy as np
 
 class Halomodel:
-    def __init__(self, m_pbh=1, n_cl=10, d_s=50, v_c=220, f_pbh=1.0, b_coord = -32.8, l_coord = 281, omega=84, rho_0=7.9e-3, a_0=5e3, r_0=8.5e3, n_stars=1.*10**7, Renault98=False, test=False):
+    def __init__(self, m_pbh=1, n_cl=10, d_s=50, v_c=220, f_pbh=1.0, b_coord = -32.8, l_coord = 281, omega=84, rho_0=7.9e-3, r_c=5e3, r_0=8.5e3, n_stars=1.*10**7):
         """
 
         Parameters
@@ -25,11 +25,20 @@ class Halomodel:
             The default is 220.
         f_pbh : Float, optional
             Fraction of dark matter in primordial black holes. The default is 1.
+        b_coord : Float, optional
+            Large Magellanic Cloud latitude (in galactic coordinates), in degrees. The default is -32.8.
+        l_coord: Float, optional
+            Large Magellanic Cloud longitude (in galactic coordinates), in degrees. The default is 281.
+        omega : Float, optional
+            Solid angle of the viewing area for microlensing, in square degrees. The default is 84.
+        rho_0 : Float, optional
+            Local dark matter density, in solar masses / pc^3. The default is 7.9e-3.
+        r_c : Float, optional
+            Core radius in the standard halo model, in pc. The default is 5e3.
+        r_0 : Float, optional
+            Distance of the Sun from the galactic centre, in pc. The default is 8.5e3.
         n_stars : Float, optional
             Number of stars observed.
-        test : Boolean, optional
-            If True, use parameters of the pdf that allow for simple analytic
-            results to test the code.
 
         Returns
         -------
@@ -37,8 +46,7 @@ class Halomodel:
 
         """
         # conversion factor from km/s to pc/yr
-        #speed_conversion = 1.022704735e-6
-        speed_conversion = 1.0227e-6
+        speed_conversion = 1.022704735e-6
 
         self.m_pbh = m_pbh   # mass of each PBH
         self.f_pbh = f_pbh  # Fraction of DM in PBHs        
@@ -53,7 +61,7 @@ class Halomodel:
         
         """ Set astrophysical parameters"""
         self.rho_0 = rho_0   # dark matter density at the Sun, in units M_sun pc^{-3}
-        self.a_0 = a_0   # galaxy core radius, in pc
+        self.r_c = r_c   # galaxy core radius, in pc
         self.r_0 = r_0   # Sun's distance from galactic centre, in pc
         self.b_coord, self.l_coord = b_coord, l_coord  # galactic coordinates, in degrees
         self.d_s = (
@@ -65,7 +73,7 @@ class Halomodel:
             * np.cos(np.radians(self.b_coord))
             * np.cos(np.radians(self.l_coord))
         )
-        self.b = self.r_0 ** 2 + self.a_0 ** 2
+        self.b = self.r_0 ** 2 + self.r_c ** 2
         self.k = (
             0.5
             * np.sqrt(4 * self.b - self.a ** 2)
@@ -130,11 +138,10 @@ class Halomodel:
             Einstein radius of a lens at line-of-sight distance d_L, in pc.
 
         """
-        #return 4.371625683e-7 * np.sqrt(self.m_pbh * (self.d_s - d_L) * (d_L / self.d_s))
-        return 4.37e-7 * np.sqrt(self.m_pbh * (self.d_s - d_L) * (d_L / self.d_s))
+        return 4.371625683e-7 * np.sqrt(self.m_pbh * (self.d_s - d_L) * (d_L / self.d_s))
 
 
-    def event_rate(self, d_L, v_c, u_T=1):
+    def event_rate(self, d_L, v_c):
         """
         Calculate microlensing event rate for a single cluster.
 
@@ -144,17 +151,14 @@ class Halomodel:
             Line-of-sight distance, in pc.
         v_c : Quantity
             Cluster velocity, in pc / yr.
-        u_T : Float, optional
-            Threshold impact parameter, in units of the Einstein radius.
-            The default is 1.
 
         Returns
         -------
         Float.
-            Microlensing event rate for a single cluster.
+            Microlensing event rate for a single cluster, in yr^{-1}.
 
         """
-        return  (2 * v_c * self.n_cl * self.einstein_radius(d_L) * u_T / (self.omega * d_L ** 2))
+        return  (2 * v_c * self.n_cl * self.einstein_radius(d_L) / (self.omega * d_L ** 2))
             
             
     def pdf_cluster_positions(self, d_L):
@@ -164,7 +168,7 @@ class Halomodel:
         Parameters
         ----------
         d_L : Quantity
-            Line-of-sight distance, with dimensions of length.
+            Line-of-sight distance, in pc.
 
         Returns
         -------
@@ -174,17 +178,6 @@ class Halomodel:
 
         """
         
-        """
-        if d_L >= self.d_s or d_L < 0:
-            return 1e-16
-        else:
-           return (self.omega
-           * self.rho_0
-           * self.b
-           * self.f_pbh
-           / (self.n_clusters * self.n_cl * self.m_pbh)
-           ) * d_L ** 2 / (d_L ** 2 + (self.a * d_L) + self.b)
-        """
         return (self.omega
            * self.rho_0
            * self.b
@@ -200,7 +193,7 @@ class Halomodel:
         Parameters
         ----------
         d_L : Quantity
-           Line of sight distance, with dimensions of length.
+           Line of sight distance, in pc.
 
         Returns
         -------
@@ -230,7 +223,8 @@ class Halomodel:
     
     def rejection_sampler_positions(self):
         """
-        Sample values from a probability distribution using rejection sampling.
+        Sample values from the probability distribution of cluster positions, 
+        using rejection sampling.
         
         
         Parameters
@@ -239,7 +233,7 @@ class Halomodel:
         Returns
         -------
         Float.
-            Sample from the probability distribution.
+            Sample from the probability distribution of cluster positions.
     
         """
         inrange = False
