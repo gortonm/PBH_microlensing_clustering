@@ -11,73 +11,6 @@ import matplotlib.pyplot as plt
 import halomodel_optimised as hm
 import os
 
-
-
-def bins_setup(nbins, t_max=10000/365.25):
-    """
-    Create bins for histogram to calculate approximate event duration 
-    distribution.
-
-    Parameters
-    ----------
-    nbins : Integer
-        Number of bins.
-    t_max : Float, optional
-        Maximum event duration, in years. The default is 1000/365.25.
-
-    Returns
-    -------
-    Numpy array of type Float
-        Bin edges.
-
-    """
-    return np.linspace(0, t_max, nbins+1)
-
-def bin_value(t_E, gamma_c, bins, bin_edges):
-    """
-    Bin a given event duration.
-
-    Parameters
-    ----------
-    t_E : Float
-        Event duration value, in units of years.
-    gamma_c : Float
-        Contribution of a given PBH cluster to the total event rate.
-    bins : Numpy array of type float
-        Bins representing frequency density of a given event duration range.
-    bin_edges : Numpy array of type Float
-        Edges of the bins used to calculate the approximate event duration
-        distribution.
-
-    Returns
-    -------
-    None.
-
-    """
-    for i in range(0, len(bin_edges)-1):
-        bin_width = bin_edges[1] - bin_edges[0]
-        if bin_edges[i] <= t_E <= bin_edges[i+1]:
-            #bin_width = bin_edges[i+1] - bin_edges[i]
-            bins[i] += gamma_c / bin_width
-            break
-    return
-
-
-# Plot a set of data points like a histogram
-def plot_hist_style(x, y):
-    dx = (x[1] - x[0])
-    x2 = []
-    y2 = []
-    area = dx * np.sum(y)
-    for i in range(len(x)):
-        x2.append(x[i])
-        y2.append(y[i])
-        x2.append(x[i]+dx)
-        y2.append(y[i])
-    return x2, y2, area
-
-
-
 # Range of PBH masses to consider
 #m_pbhs = 10**np.arange(-1, 3.1, 1)
 m_pbhs = 10**np.arange(1, 2.1, 1)
@@ -114,42 +47,13 @@ for k, m_pbh in enumerate(m_pbhs):
             gamma_c = setup.event_rate(d_L, v)
             
             bin_spacing = upper[k] / np.sqrt(len(t_hat))
-            
-            """Sanity check: find total value of the event rate from all contributions"""
-            #print('Total event rate / yr^{-1} = ' + str(np.sum(gamma_c)))
-            
-            
-            bin_edges =  np.arange(0, upper[k]+bin_spacing/2, bin_spacing/100)
-            density = np.zeros(len(bin_edges))
-                       
-            for j in range(len(t_hat)):
-                bin_value(t_hat[j], gamma_c[j], density, bin_edges)
-                
-            
-            t_hat_sample, dgamma_sample, area = plot_hist_style(bin_edges, density)
-                
+                        
             plt.figure()
-            #plt.hist(t_hat, weights = gamma_c, bins = np.arange(0, upper[k]+bin_spacing/2, bin_spacing))
-            plt.plot(t_hat_sample, dgamma_sample)
+            plt.hist(t_hat, weights = np.array(gamma_c) / bin_spacing, bins = np.arange(0, upper[k]+bin_spacing/2, bin_spacing))
             plt.plot(np.array(t_smooth) / 365.25, dgamma_smooth, color='k')
-            
             plt.xlabel('$\hat{t}$ / yr')
             plt.ylabel(r'$\frac{\mathrm{d}\Gamma}{\mathrm{d} \hat{t}}$ / $\mathrm{yr}^{-2}$')
             plt.xlim(0, upper[k])
             plt.ylim(0, max(dgamma_smooth) * 1.5)
             plt.title('$N_\mathrm{cl}$' + '$ = 10^{:.0f}$'.format(np.log10(n_cl)) + ', $M_\mathrm{PBH} $' + '$= 10^{:.0f} M_\odot$'.format(np.log10(m_pbh)))          
 
-
-
-"""Test for plot_hist_style"""
-sample = np.random.normal(0, size=10000)
-bin_edges = np.linspace(-4, 4, 100)
-plt.hist(sample, bins=bin_edges)
-
-density = np.zeros(len(bin_edges))
-                       
-for j in range(len(sample)):
-    bin_value(sample[j], 1., density, bin_edges)
-
-x, y, area = plot_hist_style(bin_edges, density)
-plt.plot(x, (bin_edges[1]-bin_edges[0]) * np.array(y))
