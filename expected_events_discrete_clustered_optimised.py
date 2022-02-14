@@ -32,16 +32,73 @@ def load_eff():
         eff_x.append(float(col[0]))
         # include factor of 0.9 to conservatively account for lensing by binary lenses (see caption of Fig. 9 Tisserand+ '07)
         eff_y.append(float(col[1]))
+        
     # return efficiency function event duration values in units of years
     return np.array(eff_x) / 365.25, np.array(eff_y)
 
 
-def find_tE_gamma_c(dL_values, v_values, m_pbh, n_cl, d_s=50, v_c=220):    # Find event durations and contributions to the event rate, in units of years / yr^{-1}
-    setup = hm.Halomodel(m_pbh=m_pbh, n_cl=n_cl, d_s=50, v_c=220)
-    return setup.einstein_radius(dL_values) / v_values, setup.event_rate(dL_values, v_values)
+def find_tE_gamma_c(dL_values, v_values, m_pbh, n_cl, d_s=50, v_c=220):
+    """
+    Find Einstein diameter crossing times (in years) and contributions to the 
+    event rate (in inverse years), given values for PBH cluster distances and speeds
 
-# calculate the number of expected events, for the discrete case
-def n_ex(dL_values, v_values, m_pbh, n_cl, save=True, eff=True, EROS2=True, blendingcorrection=False, poisson=True):
+    Parameters
+    ----------
+    dL_values : Numpy array of type Float
+        Array of PBH cluster line-of-sight distances, in pc.
+    v_values : Numpy array of type Float
+        Array of PBH cluster speeds, in pc / yr.
+    m_pbh : Float
+        PBH mass, in solar masses.
+    n_cl : Float
+        Number of PBHs per cluster.
+    d_s : Float, optional
+        Source distance, in kiloparsecs. The default is 50.
+    v_c : Float, optional
+        Circular speed in the Maxwell-Boltzmann distribution, in km/s. The default is 220.
+
+    Returns
+    -------
+    Numpy array of type Float.
+        Array of event durations (Einstein diameter crossing times), in years.
+    
+    Numpy array of type Float:
+        Array of contributions to the total event rate, in inverse years.
+
+    """
+    setup = hm.Halomodel(m_pbh=m_pbh, n_cl=n_cl, d_s=50, v_c=220)
+    return 2 * setup.einstein_radius(dL_values) / v_values, setup.event_rate(dL_values, v_values)
+
+
+def n_ex(dL_values, v_values, m_pbh, n_cl, eff=True, EROS2=True, blendingcorrection=False, poisson=True):
+    """
+    Calculate the number of events in a given realisation, given values for PBH cluster distances and speeds.
+
+    Parameters
+    ----------
+    dL_values : Numpy array of type Float
+        Array of PBH cluster line-of-sight distances, in pc.
+    v_values : Numpy array of type Float
+        Array of PBH cluster speeds, in pc / yr.
+    m_pbh : Float
+        PBH mass, in solar masses.
+    n_cl : Float
+        Number of PBHs per cluster.
+    eff : Boolean, optional
+        If True, use the EROS-2 efficiency function. If False, assume perfect efficiency. The default is True.
+    EROS2 : Boolean, optional
+        If True, use the exposure from the EROS-2 survey. The default is True.
+    blendingcorrection : Boolean, optional
+        If True, accounts for average blending correction from EROS-2 by reducing detection efficiency by 10%. The default is True.
+    poisson : Boolean, optional
+        DESCRIPTION. If True, draw the number of events from a Poisson distribution. Otherwise, return the mean value. The default is True.
+
+    Returns
+    -------
+    Float
+        Number of events in a particular realisation.
+
+    """
     
     # calculate event durations and contributions to the total event rate
     tE_values, gamma_c_values = find_tE_gamma_c(dL_values, v_values, m_pbh, n_cl)
