@@ -31,10 +31,7 @@ d_s, v_c = 50, 220
 """Produce a sample of cluster line of sight distances and speeds"""
 for m_pbh in m_pbhs:
     for n_cl in n_cls:
-        
-        #n_ex_EROS_efficiency = 0
-        #n_ex_perfect_efficiency = 0
-        
+                
         for i in range(n_realisations):
             d_L, v = produce_values(n_cl, m_pbh, d_s, v_c)
             
@@ -51,6 +48,7 @@ for m_pbh in m_pbhs:
     
     for n_cl in n_cls:
         n_ex_EROS_efficiency = 0
+        n_ex_EROS_efficiency_blendingcorrection = 0
         n_ex_perfect_efficiency = 0
         
         for i in range(n_realisations):
@@ -60,7 +58,9 @@ for m_pbh in m_pbhs:
             
             # calculate number of expected events
             n_ex_EROS_efficiency += n_ex(d_L, v, m_pbh, n_cl, eff=True)    # EROS-2 efficiency curve
+            n_ex_EROS_efficiency_blendingcorrection += n_ex(d_L, v, m_pbh, n_cl, eff=True, blendingcorrection = True)    # EROS-2 efficiency curve, with average blending correction
             n_ex_perfect_efficiency += n_ex(d_L, v, m_pbh, n_cl, eff=False)    # perfect efficiency
             
         np.savetxt(filepath + '_n_ex_EROS.txt', n_ex_EROS_efficiency)
+        np.savetxt(filepath + '_n_ex_EROS_blendingcorrection.txt', n_ex_EROS_efficiency_blendingcorrection)
         np.savetxt(filepath + '_n_ex_perfect.txt', n_ex_perfect_efficiency)
