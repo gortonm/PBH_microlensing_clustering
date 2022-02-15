@@ -41,7 +41,9 @@ colours = ['yellow', 'b', 'r', 'm']
 
 plt.figure()
 for j, n_cl in enumerate(n_cls):
-    dx = -0.02 + 0.01*j
+    
+    # displace positions of different cluster sizes on the x-axis
+    dx = 0.01 * (-len(n_cls) + j)
     
     for m_pbh in m_pbhs:
         f_pbhs = []    # create array of f_PBH values at fixed M_PBH
