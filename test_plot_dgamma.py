@@ -13,20 +13,27 @@ import os
 
 # Range of PBH masses to consider
 #m_pbhs = 10**np.arange(-1, 3.1, 1)
-m_pbhs = 10**np.arange(0., 0.1, 1)
+#m_pbhs = 10**np.arange(0., 0.1, 1)
+m_pbhs = np.array([1, 10, 100])
 
 # Uppermost values of the event duration to plot, in days
 upper = np.array([300, 1000, 2500])
 
 # Range of numbers of PBHs per cluster to consider
 #n_cls = 10**np.arange(3, 7.1, 1.)
-n_cls = 10**np.arange(7, 7.1, 1.)
+n_cls = 10**np.arange(5, 5.1, 1.)
 
 # Number of realisations for each PBH mass and cluster size
 n_realisations = 11
 
 # realisation number to start from
 min_realisations = 0
+
+# choose a range of realisations to plot
+realisations_ncl_1e5_mpbh_1 = np.array([3, 4, 467])
+realisations_ncl_1e5_mpbh_10 = np.array([3, 4, 68])
+realisations_ncl_1e5_mpbh_100 = np.array([3, 4, 778])
+
 
 for k, m_pbh in enumerate(m_pbhs):
     
@@ -44,32 +51,55 @@ for k, m_pbh in enumerate(m_pbhs):
         plt.gca().xaxis.set_visible(False)
         plt.gca().yaxis.set_visible(False)
         
-        plt.subplots_adjust(wspace=0.5, hspace=0.5, top=0.85)
-        plt.title('$N_\mathrm{cl}$' + '$ = 10^{:.0f}$'.format(np.log10(n_cl)) + ', $M_\mathrm{PBH} $' + '$= 10^{:.0f} M_\odot$'.format(np.log10(m_pbh)))          
+        plt.subplots_adjust(wspace=0.5, hspace=0.2, top=0.9)
 
         setup = hm.Halomodel(m_pbh=m_pbh, n_cl=n_cl)
         
-        for i in range(min_realisations, n_realisations):
-            ax = fig.add_subplot(n_realisations-min_realisations, 1, i+1-min_realisations)
-            filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh)) + str(i)
+        if np.log10(n_cl) == 5 and np.log10(m_pbh) == 0:
+            realisations = realisations_ncl_1e5_mpbh_1
+            scale = 1e5
+            
+        if np.log10(n_cl) == 5 and np.log10(m_pbh) == 1:
+            realisations = realisations_ncl_1e5_mpbh_10
+            scale = 1e6
+            
+        if np.log10(n_cl) == 5 and np.log10(m_pbh) == 2:
+            realisations = realisations_ncl_1e5_mpbh_100
+            scale = 1e7
+        
+        #for i in range(min_realisations, n_realisations):
+        for i, r in enumerate(realisations):
+            #ax = fig.add_subplot(n_realisations-min_realisations, 1, i+1-min_realisations)
+            ax = fig.add_subplot(3, 1, i+1)
+            filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh)) + str(r)
             d_L = np.loadtxt(filepath + '_dL.txt', delimiter=',')
             v = np.loadtxt(filepath + '_v.txt', delimiter=',')
             
             t_hat = 2 * setup.einstein_radius(d_L) / v
             gamma_c = setup.event_rate(d_L, v)
             
-            bin_spacing = 0.1 * upper[k] / np.sqrt(len(t_hat))
-                        
-            ax.plot(t_smooth, dgamma_smooth, color='k', linewidth=0.7)
-            ax.hist(np.array(t_hat) * 365.25, weights = np.array(gamma_c) / (bin_spacing / 365.25), histtype='step', bins = np.arange(0, upper[k]+bin_spacing/2, bin_spacing))
-            ax.set_xlabel('$\hat{t}$ (days)')
-            ax.set_ylabel(r'$\mathrm{d}\Gamma / \mathrm{d} \hat{t}$ (years)$^{-2}$')
-            ax.set_xlim(0, upper[k])
-            ax.set_ylim(0, max(dgamma_smooth) * 2)
-            ax.set_title('Realisation ' + str(i))
+            bin_spacing = upper[k] / np.sqrt(len(t_hat))
             
+            #scale = 1
+                        
+            ax.plot(t_smooth, scale * np.array(dgamma_smooth), color='k', linewidth=0.7)
+            ax.hist(np.array(t_hat) * 365.25, weights = scale * np.array(gamma_c) / (bin_spacing / 365.25), histtype='step', bins = np.arange(0, upper[k]+bin_spacing/2, bin_spacing))
+            ax.set_xlabel('$\hat{t}$ (days)')
+            ax.set_ylabel(r'$10^{:.0f}'.format(np.log10(scale)) + '\mathrm{d}\Gamma / \mathrm{d} \hat{t}$ (years)$^{-2}$')
+            ax.set_xlim(0, upper[k])
+            ax.set_ylim(0, scale * max(dgamma_smooth) * 2.)
+            if r == 467:
+                ax.set_ylim(0, scale * max(dgamma_smooth) * 3.5)
+            if r == 68:
+                ax.set_ylim(0, scale * max(dgamma_smooth) * 9.5)
+            if r == 778:
+                ax.set_ylim(0, scale * max(dgamma_smooth) * 11.)
+            #ax.set_title('Realisation ' + str(r))
+            
+        plt.tight_layout()
         plt.savefig(f'{os.getcwd()}' + '/figures/event_duration_distributions/n_cl=1e{:.0f}_mpbh=1e{:.0f}'.format(np.log10(n_cl), np.log10(m_pbh)) + '.pdf')
-
+        #plt.title('$N_\mathrm{cl}$' + '$ = 10^{:.0f}$'.format(np.log10(n_cl)) + ', $M_\mathrm{PBH} $' + '$= {:.0f} M_\odot$'.format(m_pbh))          
+        #plt.savefig(f'{os.getcwd()}' + '/figures/event_duration_distributions/n_cl=1e{:.0f}_mpbh=1e{:.0f}_title'.format(np.log10(n_cl), np.log10(m_pbh)) + '.pdf')
 
 
 """ Try plotting different N_cl on the same M_PBH plot"""

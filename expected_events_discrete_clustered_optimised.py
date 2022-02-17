@@ -70,6 +70,14 @@ def find_tE_gamma_c(dL_values, v_values, m_pbh, n_cl, d_s=50, v_c=220):
     return 2 * setup.einstein_radius(dL_values) / v_values, setup.event_rate(dL_values, v_values)
 
 
+def length_extended(x):
+    return 1 if isinstance(x, np.float64) else len(x) 
+
+def convert_to_array(x):
+    return np.array([x]) if isinstance(x, np.float64) else x
+
+
+
 def n_ex(dL_values, v_values, m_pbh, n_cl, eff=True, EROS2=True, blendingcorrection=False, poisson=True):
     """
     Calculate the number of events in a given realisation, given values for PBH cluster distances and speeds.
@@ -91,7 +99,7 @@ def n_ex(dL_values, v_values, m_pbh, n_cl, eff=True, EROS2=True, blendingcorrect
     blendingcorrection : Boolean, optional
         If True, accounts for average blending correction from EROS-2 by reducing detection efficiency by 10%. The default is True.
     poisson : Boolean, optional
-        DESCRIPTION. If True, draw the number of events from a Poisson distribution. Otherwise, return the mean value. The default is True.
+        Controls whether to draw the number of PBH clusters from a Poisson distribution or use the exact value, rounded to the nearest integer. The default is True.
 
     Returns
     -------
@@ -123,10 +131,14 @@ def n_ex(dL_values, v_values, m_pbh, n_cl, eff=True, EROS2=True, blendingcorrect
     
     n_obs = 0
     
+    tE_values, gamma_c_values = convert_to_array(tE_values), convert_to_array(gamma_c_values)
+    
     # calculate integrand at each event duration value
-    for i in range(len(tE_values)):
+    for i in range(length_extended(tE_values)):
         if poisson:
             n_obs += np.random.poisson(blend * n_stars * obs_time * gamma_c_values[i] * np.interp(tE_values[i], eff_x, eff_y, left=0, right=0) )
+            #print(np.interp(tE_values[i], eff_x, eff_y, left=0, right=0))
+        
         else:
             n_obs += blend * n_stars * obs_time * gamma_c_values[i] * np.interp(tE_values[i], eff_x, eff_y, left=0, right=0)
                 
