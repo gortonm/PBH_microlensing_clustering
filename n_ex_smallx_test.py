@@ -18,7 +18,7 @@ def poisson_pmf(k, lam):
 
 # Range of PBH masses to consider
 #m_pbhs = 10**np.arange(0., 1.1, 1)
-m_pbhs = 10**np.array([1.])
+m_pbhs = 10**np.array([2.])
 
 # Range of numbers of PBHs per cluster to consider
 #n_cls = 10**np.arange(7., 2.9, -1.)
@@ -44,7 +44,7 @@ for m_pbh in m_pbhs:
         n_ex_mean = []
         n_ex_poisson = []
         
-        x_min_min = 0.02
+        x_min_min = 0.05
         i_min = 0
         
         for i in range(n_realisations):
