@@ -60,14 +60,14 @@ def find_tE_gamma_c(dL_values, v_values, m_pbh, n_cl, d_s=50, v_c=220):
     Returns
     -------
     Numpy array of type Float.
-        Array of event durations (Einstein diameter crossing times), in years.
+        Array of event durations (Einstein radius crossing times), in years.
     
     Numpy array of type Float:
         Array of contributions to the total event rate, in inverse years.
 
     """
     setup = hm.Halomodel(m_pbh=m_pbh, n_cl=n_cl, d_s=50, v_c=220)
-    return 2 * setup.einstein_radius(dL_values) / v_values, setup.event_rate(dL_values, v_values)
+    return setup.einstein_radius(dL_values) / v_values, setup.event_rate(dL_values, v_values)
 
 
 def length_extended(x):
