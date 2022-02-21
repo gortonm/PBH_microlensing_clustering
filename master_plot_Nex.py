@@ -49,17 +49,25 @@ n_cls = 10**np.arange(6, 8.1, 1.)
 # Number of realisations for each PBH mass and cluster size
 n_realisations = 1000
 
+# Approximate mean value for smooth case
+n_cl, m_pbh = 10**3, 1.
+filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh))
+mean_smooth = 24.6
+mean_smooth_perfect = 60.1
 
 for m_pbh in m_pbhs:
     
     # mean value of the number of expected events, from smoothly-distributed PBHs of mass m_pbh
     """TEMPORARY VALUE - NEEDS CALCULATING"""
-    mean_smooth = 25.4
 
-    colors = ['saddlebrown', 'r', 'darkorange', 'yellow']
+    colors = ['darkorange', 'r', 'saddlebrown', 'yellow']
     bin_spacing = 1
     bins = np.arange(0, 1000, bin_spacing)
     plt.figure(figsize=(5, 4))
+    
+    # add Poisson distribution plot for mean value from smooth case
+    plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam=mean_smooth), color='k', linestyle='dashed')
+    plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam=mean_smooth_perfect), color='k', linestyle='dotted')
     
     i = 0
     for n_cl in n_cls:
@@ -78,14 +86,13 @@ for m_pbh in m_pbhs:
         #plt.hist(n_ex_EROS_efficiency_blendingcorrection, bins=bins, density=True, color=colors[i], histtype='step', label='With average EROS-2 blending correction: $N_{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))        
         #plt.hist(n_ex_perfect_efficiency, bins=bins, density=True, color=colors[i], histtype='step', linestyle='dotted', label='$\epsilon(t_E) = 1$, $N_{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))
         plt.hist(n_ex_perfect_efficiency, bins=bins, density=True, color=colors[i], histtype='step', linestyle='dotted')
-         
+                 
         i += 1
+        
     
-    # add Poisson distribution plot for mean value from smooth case
-    #plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam=mean_smooth, color='k', label='Smooth PBH distribution'))
     plt.xlim(0, 150)
-    plt.xlabel('$N_\mathrm{exp}$')
-    plt.ylabel('$P(N_\mathrm{exp})$')
+    plt.xlabel('$N_\mathrm{obs}$')
+    plt.ylabel('$P(N_\mathrm{obs})$')
     plt.tight_layout()
     plt.legend()
 
