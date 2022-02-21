@@ -31,7 +31,7 @@ def load_eff():
     for col in list_eff_LMC[1:]:
         eff_x.append(float(col[0]))
         # include factor of 0.9 to conservatively account for lensing by binary lenses (see caption of Fig. 9 Tisserand+ '07)
-        eff_y.append(float(col[1]))
+        eff_y.append(0.9*float(col[1]))
         
     # return efficiency function event duration values in units of years
     return np.array(eff_x) / 365.25, np.array(eff_y)
