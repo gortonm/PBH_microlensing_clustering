@@ -98,7 +98,7 @@ def convert_to_array(x):
     return np.array([x]) if isinstance(x, np.float64) else x
 
 
-def produce_values(n_cl, m_pbh, d_s, v_c, omega=84, poisson=True):
+def produce_values(n_cl, m_pbh, d_s, v_c, omega=84, f_pbh=1, poisson=True):
     """
     Generate a sample of PBH cluster line-of-sight distances and speeds.
 
@@ -125,18 +125,21 @@ def produce_values(n_cl, m_pbh, d_s, v_c, omega=84, poisson=True):
         Array of PBH cluster speeds, in pc / yr.
 
     """
+    
+    # Create model for a given PBH cluster properties and parameters in the
+    # Standard Halo Model.
     setup = hm.Halomodel(m_pbh=m_pbh, n_cl=n_cl, d_s=d_s, v_c=v_c, omega=omega)
                
     # Choose number of samples to draw for MC simulation
     if poisson:
-        n_samp = np.random.poisson(setup.n_clusters)
+        n_samp = np.random.poisson(f_pbh * setup.n_clusters)
     else:
-        n_samp = int(setup.n_clusters)
+        n_samp = int(f_pbh * setup.n_clusters)
 
     dL_values = []
     v_values = [] 
                          
-    # calculate event durations
+    # Generate cluster distances and transverse speeds
     for j in range(n_samp):
         d_L = setup.rejection_sampler_positions()
         v = setup.sample_speeds_maxwell()
@@ -215,3 +218,40 @@ def n_ex(dL_values, v_values, m_pbh, n_cl, eff=True, blendingcorrection=False, p
                 
     return np.sum(np.array(n_obs))
 
+
+
+def load_constraints(Tisserand=True):
+    """
+    Load constraints on the PBH fraction from EROS-2.
+    
+    Parameters
+    ----------
+    Tisserand : Boolean. The default is False.
+        Controls whether to import constraints on the PBH fraction from Fig. 11 of Tisserand et al. (2007) or 
+        the reproduction in Fig. 1 of Green (2016).
+
+    Returns
+    -------
+    m_pbh : List of type Float
+        PBH mass (assumed monochromatic).
+    f_pbh : List of type Float
+        Constraint on the dark matter fraction in PBHs at a given (monochromatic)
+        PBH mass m_pbh.
+
+    """
+    if Tisserand:
+        name = "tisserand"
+    else:
+        name = "green_reproduction"
+
+    file_constraints_CSV = open("./data_files/eros2_constraints_" + name + ".csv")
+    constraints_CSV = csv.reader(file_constraints_CSV)
+    list_constraints_CSV = list(constraints_CSV)
+
+    m_pbh = []
+    f_pbh = []
+    for col in list_constraints_CSV[1:]:
+        m_pbh.append(float(col[0]))
+        f_pbh.append(float(col[1]))
+
+    return m_pbh, f_pbh

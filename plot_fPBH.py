@@ -78,7 +78,13 @@ def error_bars(x):
 
 def load_constraints(Tisserand=True):
     """
-    Load constraints on the PBH fraction from EROS-2, from Fig. 11 of Tisserand et al. (2007) (green curve)
+    Load constraints on the PBH fraction from EROS-2.
+    
+    Parameters
+    ----------
+    Tisserand : Boolean. The default is False.
+        Controls whether to import constraints on the PBH fraction from Fig. 11 of Tisserand et al. (2007) or 
+        the reproduction in Fig. 1 of Green (2016).
 
     Returns
     -------
