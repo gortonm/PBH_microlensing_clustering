@@ -99,23 +99,24 @@ class Halomodel:
         # Mean number of clusters in a conical volume, for the standard halo model and a monochromatic PBH mass function.
         self.n_clusters = (
             self.rho_0 * self.b * self.f_pbh * self.omega / (self.n_cl * self.m_pbh)
-        ) * (
+            ) * (
             (
-                ((self.a**2 - 2 * self.b) / np.sqrt(4 * self.b - self.a**2))
+                ((self.a ** 2 - 2 * self.b) / np.sqrt(4 * self.b - self.a ** 2))
                 * (
                     (
                         np.arctan(
-                            (self.a + 2 * self.d_s) / np.sqrt(4 * self.b - self.a**2)
+                            (self.a + 2 * self.d_s) / np.sqrt(4 * self.b - self.a ** 2)
                         )
-                        - np.arctan(self.a / np.sqrt(4 * self.b - self.a**2))
+                        - np.arctan(self.a / np.sqrt(4 * self.b - self.a ** 2))
                     )
                 )
             )
             - 0.5
-            * (self.a * np.log(((self.d_s * (self.a + self.d_s)) + self.b) / self.b))
+            * (self.a
+            * np.log(((self.d_s * (self.a + self.d_s)) + self.b) / self.b))
             + self.d_s
         )
-
+                
         # Normalisation factor for cluster positions probability distribution function
         self.k_cl = (
             self.omega
@@ -132,6 +133,14 @@ class Halomodel:
                 self.pdf_cluster_positions(self.d_s),
             ]
         )
+
+        # cluster radius, in pc
+        self.r_cl = 1.11198e-2 * self.n_cl**(5/6) * self.m_pbh ** (5/3)
+        
+        # limiting value of cluster distance below which cluster subtends a larger solid angle
+        # than the cluster itself
+        self.dL_lim = self.r_cl * np.sqrt(np.pi / self.omega)
+                
 
     def einstein_radius(self, d_L):
         """
@@ -169,7 +178,11 @@ class Halomodel:
             Microlensing event rate for a single cluster, in yr^{-1}.
 
         """
-        return 2 * v_c * self.n_cl * self.einstein_radius(d_L) / (self.omega * d_L**2)
+        if d_L > self.dL_lim:
+            return 2 * v_c * self.n_cl * self.einstein_radius(d_L) / (self.omega * d_L**2) 
+        else:
+            factor = self.omega / (np.pi * self.r_cl**2 / d_L**2)
+            return factor * 2 * v_c * self.n_cl * self.einstein_radius(d_L) / (self.omega * d_L**2)
 
     def pdf_cluster_positions(self, d_L):
         """
