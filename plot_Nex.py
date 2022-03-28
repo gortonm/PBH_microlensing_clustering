@@ -1,4 +1,5 @@
 # Code to plot Fig. 2 (P(N_obs) against N_obs)
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -49,18 +50,19 @@ def poisson_pmf(k, lam):
 
 
 # PBH masses
-m_pbhs = np.array([1, 100])
+#m_pbhs = np.array([1, 100])
+m_pbhs = np.array([1])
 
 # Nimbers of PBHs per cluster to consider
-n_cls = 10**np.arange(4, 8.1, 1.)
-# n_cls = 10**np.arange(6, 8.1, 1.)   # uncomment if only using N_cl = 1e6, 1e7, 1e8
+#n_cls = 10**np.arange(4, 8.1, 1.)
+n_cls = 10**np.arange(6, 8.1, 1.)   # uncomment if only using N_cl = 1e6, 1e7, 1e8
 
 # Number of realisations for each PBH mass and number of PBHs per cluster
-n_realisations = 1000
+n_realisations = 10000
 
 # Colours to display for different N_cl values
-colours = ['b', 'm', 'darkorange', 'r', 'saddlebrown']
-# colours = ['darkorange', 'r', 'saddlebrown']    # uncomment if only using N_cl = 1e6, 1e7, 1e8
+#colours = ['b', 'm', 'darkorange', 'r', 'saddlebrown']
+colours = ['darkorange', 'r', 'saddlebrown']    # uncomment if only using N_cl = 1e6, 1e7, 1e8
 
 # Uppermost value of N_obs to display in plot
 n_ex_upper = [150, 12]
@@ -82,22 +84,25 @@ for j, m_pbh in enumerate(m_pbhs):
     plt.figure(figsize=(5, 4))
     
     # Add Poisson probability mass function for mean value from smooth case
-    plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = mean_smooth), color='k', linestyle='dashed')
-    plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = mean_smooth_perfect), color='k', linestyle='dotted')
+    plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = round(mean_smooth)), color='k', linestyle='dashed')
+    plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = round(mean_smooth_perfect)), color='k', linestyle='dotted')
+    
+    print(round(mean_smooth))
+    round(round(mean_smooth_perfect))
     
     for i, n_cl in enumerate(n_cls):        
         # Load file for number of events in all realisations, for a given PBH mass and number of PBHs per cluster
         filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh))
-        n_ex_EROS_efficiency = np.loadtxt(filepath + 'n_ex_EROS.txt')
-        n_ex_perfect_efficiency = np.loadtxt(filepath + 'n_ex_perfect.txt')
+        n_ex_EROS_efficiency = np.loadtxt(filepath + 'n_ex_EROS_2_fpbh=1.000_1e4samples.txt')
+        n_ex_perfect_efficiency = np.loadtxt(filepath + 'n_ex_perfect_fpbh=1.000_1e4samples.txt')
       
         plt.hist(n_ex_EROS_efficiency, bins=bins, density=True, color=colours[i], histtype='step', label='$N_\mathrm{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))
         plt.hist(n_ex_perfect_efficiency, bins=bins, density=True, color=colours[i], histtype='step', linestyle='dotted')
                  
     plt.xlim(0, n_ex_upper[j])
     plt.xlabel('$N_\mathrm{obs}$')
-    plt.ylabel('$P(N_\mathrm{obs})$')
+    plt.ylabel('$P[N_\mathrm{obs}(f=1)]$')
     plt.tight_layout()
     plt.legend()
 
-    plt.savefig('N_exp_mpbh={:.0f}'.format((m_pbh)) + 'Msun.pdf')
+    #plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun_1e4samples_factor.pdf')
