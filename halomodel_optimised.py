@@ -53,6 +53,9 @@ class Halomodel:
         """
         # conversion factor from km/s to pc/yr
         speed_conversion = 1.022704735e-6
+        
+        self.c, self.G = 2.99792458e5 * speed_conversion, 4.30091e-3 * speed_conversion**2     # convert to units with [distance] = pc, [time] = yr
+
 
         self.m_pbh = m_pbh  # mass of each PBH
         self.f_pbh = f_pbh  # Fraction of DM in PBHs
@@ -135,7 +138,7 @@ class Halomodel:
         )
 
         # cluster radius, in pc
-        self.r_cl = 1.11198e-2 * self.n_cl**(5/6) * self.m_pbh ** (5/3)
+        self.r_cl = 1.11198e-2 * self.n_cl**(5/6) * self.m_pbh ** (1/3)
         
         # limiting value of cluster distance below which cluster subtends a larger solid angle
         # than the cluster itself
@@ -145,21 +148,19 @@ class Halomodel:
     def einstein_radius(self, d_L):
         """
         Calculate Einstein radius of a lens.
-
+    
         Parameters
         ----------
         d_L : Float
             Line-of-sight distance, in pc.
-
+    
         Returns
         -------
         Float
             Einstein radius of a lens at line-of-sight distance d_L, in pc.
-
+    
         """
-        return 4.371625683e-7 * np.sqrt(
-            self.m_pbh * (self.d_s - d_L) * (d_L / self.d_s)
-        )
+        return np.sqrt(4 * self.G * self.m_pbh * d_L * (self.d_s - d_L) / (self.c**2 * self.d_s))
 
     def event_rate(self, d_L, v_c):
         """
@@ -178,12 +179,14 @@ class Halomodel:
             Microlensing event rate for a single cluster, in yr^{-1}.
 
         """
+        return 2 * v_c * self.n_cl * self.einstein_radius(d_L) / (self.omega * d_L**2)
+        """
         if d_L > self.dL_lim:
             return 2 * v_c * self.n_cl * self.einstein_radius(d_L) / (self.omega * d_L**2) 
         else:
             factor = self.omega / (np.pi * self.r_cl**2 / d_L**2)
             return factor * 2 * v_c * self.n_cl * self.einstein_radius(d_L) / (self.omega * d_L**2)
-
+        """
     def pdf_cluster_positions(self, d_L):
         """
         Probability distribution function for PBH cluster positions.
