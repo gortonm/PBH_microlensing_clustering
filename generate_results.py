@@ -3,7 +3,7 @@
 import numpy as np
 import os
 
-new_RE = True
+new_RE = False
 
 if new_RE:
     from expected_events_discrete_clustered import n_ex, produce_values, load_constraints
@@ -97,6 +97,6 @@ for n_cl in n_cls:
                 
             else:
                 append = 'oldRE'
-            np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples' + append +'.txt'.format(f_pbh), n_ex_EROS_efficiency)
-            np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples' + append +'txt', n_ex_perfect_efficiency)
+            np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt'.format(f_pbh), n_ex_EROS_efficiency)
+            np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'txt', n_ex_perfect_efficiency)
             
