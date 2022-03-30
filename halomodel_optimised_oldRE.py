@@ -148,19 +148,21 @@ class Halomodel:
     def einstein_radius(self, d_L):
         """
         Calculate Einstein radius of a lens.
-    
+
         Parameters
         ----------
         d_L : Float
             Line-of-sight distance, in pc.
-    
+
         Returns
         -------
         Float
             Einstein radius of a lens at line-of-sight distance d_L, in pc.
-    
+
         """
-        return np.sqrt(4 * self.G * self.m_pbh * d_L * (self.d_s - d_L) / (self.c**2 * self.d_s))
+        return 4.371625683e-7 * np.sqrt(
+            self.m_pbh * (self.d_s - d_L) * (d_L / self.d_s)
+        )
 
     def event_rate(self, d_L, v_c):
         """

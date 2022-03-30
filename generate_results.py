@@ -2,13 +2,20 @@
 
 import numpy as np
 import os
-from expected_events_discrete_clustered import n_ex, produce_values, load_constraints
+
+new_RE = True
+
+if new_RE:
+    from expected_events_discrete_clustered import n_ex, produce_values, load_constraints
+else:
+    from expected_events_discrete_clustered_oldRE import n_ex, produce_values, load_constraints
 
 # Range of PBH masses to consider (in solar masses)
-m_pbhs = 10**np.arange(0., 2.1, 1.)
+m_pbhs = 10**np.arange(0., 0.1, 1.)
 
 # Number of PBHs per cluster
-n_cls = 10**np.arange(8, 2.9, -1.)
+n_cls = 10**np.arange(8, 5.9, -1.)
+#n_cls = np.array([10**3])
 
 # Number of realisations for each PBH mass and cluster size
 n_realisations = 10000
@@ -51,8 +58,8 @@ def save(d_L, v, n_cl, m_pbh):
     """
     # Save cluster distances and speeds
     filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh)) + str(i)
-    np.savetxt(filepath + '_dL.txt', d_L)
-    np.savetxt(filepath + '_v.txt', v)
+    np.savetxt(filepath + 'oldRE_dL.txt', d_L)
+    np.savetxt(filepath + 'oldRE_v.txt', v)
     
     
             
@@ -65,20 +72,31 @@ for n_cl in n_cls:
             
             n_ex_EROS_efficiency = np.zeros(n_realisations)
             n_ex_perfect_efficiency = np.zeros(n_realisations)
-            np.random.seed(np.log10(n_cl * m_pbh))
+                       
+            if n_cl * m_pbh > 2**32 - 1:
+                np.random.seed(int(np.log(n_cl*m_pbh)))
+                
+            else:
+                np.random.seed(int(n_cl * m_pbh))
+
     
             for i in range(0, n_realisations):
                 
                 d_L, v = produce_values(n_cl, m_pbh, d_s, v_c, f_pbh=f_pbh)
                 
                 
-                if n_cl >= 10**6:   # don't save cluster distances and speeds for small cluster sizes, since this uses a very large amount of storage space
+                if n_cl >= 10**3:   # don't save cluster distances and speeds for small cluster sizes, since this uses a very large amount of storage space
                     save(d_L, v, n_cl, m_pbh)
                 
                 # Calculate number of expected events
                 n_ex_EROS_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl)    # EROS-2 efficiency curve
                 n_ex_perfect_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl, eff=False)    # Perfect efficiency
-                            
-            np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples_factor.txt'.format(f_pbh), n_ex_EROS_efficiency)
-            np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples_factor.txt', n_ex_perfect_efficiency)
+            
+            if new_RE:
+                append = 'newRE'
+                
+            else:
+                append = 'oldRE'
+            np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples' + append +'.txt'.format(f_pbh), n_ex_EROS_efficiency)
+            np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples' + append +'txt', n_ex_perfect_efficiency)
             

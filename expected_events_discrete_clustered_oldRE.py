@@ -1,6 +1,7 @@
 import numpy as np
 import csv
-import halomodel_optimised as hm
+#import halomodel_optimised as hm
+import halomodel_optimised_oldRE as hm
 
 def load_eff():
     """
