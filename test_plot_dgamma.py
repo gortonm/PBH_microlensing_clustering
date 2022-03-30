@@ -7,12 +7,18 @@ import halomodel_optimised as hm
 import os
 
 new_RE = False
+seed_i = False
+
+if seed_i:
+    seed_append = 'seed*i'
+else:
+    seed_append = ''
 
 if new_RE:
-    append = 'newRE'
+    append = 'newRE' + seed_append
     
 else:
-    append = 'oldRE'
+    append = 'oldRE' + seed_append
 
 
 # Specify the plot style
@@ -46,7 +52,8 @@ n_cls = 10**np.arange(6, 6.1, 1.)    # for Fig. 1, only show N_cl = 1e5
 
 # choose realisations to plot (these depend on the PBH mass)
 #realisations_ncl_1e5_mpbh_1 = np.array([0, 1, 607])
-realisations_ncl_1e5_mpbh_1 = np.array([0, 1, 732])
+r_smallx = 520
+realisations_ncl_1e5_mpbh_1 = np.array([0, 1, r_smallx])
 realisations_ncl_1e5_mpbh_10 = np.array([0, 1, 847])
 #realisations = np.array([0,1,2])
 scale=1
@@ -97,7 +104,7 @@ for k, m_pbh in enumerate(m_pbhs):
             
             # Values of r correspond to specific realisations with a large spike at small event durations
             # For these cases, increase the maximum value of the y-axis
-            if r == 607:
+            if r == r_smallx:
                 ax.set_ylim(0, scale * max(dgamma_smooth) * 9.5)
             if r == 847:
                 ax.set_ylim(0, scale * max(dgamma_smooth) * 16)

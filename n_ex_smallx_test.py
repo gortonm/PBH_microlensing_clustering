@@ -34,13 +34,6 @@ n_realisations = 1000
 
 """Calculate the mean number of expected events"""
 for m_pbh in m_pbhs:
-    #fig1 = plt.figure()
-    #fig1.suptitle('$M_\mathrm{PBH}$ ' + '= {:.0f}'.format(m_pbh) + '$M_\odot$')
-    """
-    fig2 = plt.figure()
-    fig2.suptitle('$M_\mathrm{PBH}$ ' + '= {:.0f}'.format(m_pbh) + '$M_\odot$')
-    """
-    plt.subplots_adjust(wspace=0.4, hspace=0.4, top=0.85)
    
     for j, n_cl in enumerate(n_cls):
         
@@ -80,10 +73,10 @@ for m_pbh in m_pbhs:
             
             
             
-            """
-            if 0.05 < min(d_L) / 50e3 < 0.055:
+            
+            if min(d_L) / 50e3 < 0.01:
                 print('i = {:.0f}'.format(i) + ', x={:.5f}'.format(min(d_L)/50e3))
-            """
+            
             
             n_samples += len(d_L)
             n_samples_small_x += len(d_L[d_L < dL_lim])
@@ -98,51 +91,3 @@ for m_pbh in m_pbhs:
         print(n_realisations_small_x)
 
         print(n_samples_small_x / n_samples)
-        """
-        fig3 = plt.figure()
-        plt.plot(n_ex_poisson, x_min, 'x')
-        plt.xlabel('$N_\mathrm{ex}$')
-        plt.ylabel('min$(x)$')
-        plt.title('$N_\mathrm{cl} ' + '= 10^{:.0f}$'.format(np.log10(n_cl)) + ', $M_\mathrm{PBH} ' + '= {:.0f}$'.format(m_pbh) + '$M_\odot$')
-        #plt.yscale('log')
-        #plt.xscale('log')
-        plt.savefig(f'{os.getcwd()}' + '/figures/small_x_test/n_ex_m_pbh=1e{:.0f}_n_cl=1e{:.0f}'.format(np.log10(m_pbh), np.log10(n_cl)) + '.pdf')
-        plt.close()
-        """
-        """
-        if n_cl < 10**5.5:
-            fig4 = plt.figure()
-            axis = np.arange(0, 100, 1)
-            plt.hist(n_ex_poisson, density=True, bins=100)
-            plt.plot(poisson_pmf(axis, lam=np.mean(n_ex_poisson)), label='Poisson distribution')
-            plt.xlabel('$N_\mathrm{ex}$')
-            plt.ylabel('$P(N_\mathrm{ex})$')
-            plt.legend()
-            plt.title('$N_\mathrm{cl} ' + '= 10^{:.0f}$'.format(np.log10(n_cl)) + ', $M_\mathrm{PBH} ' + '= {:.0f}$'.format(m_pbh) + '$M_\odot$')
-            plt.savefig(f'{os.getcwd()}' + '/figures/small_x_test/poisson_comparison_n_ex_m_pbh=1e{:.0f}_n_cl=1e{:.0f}'.format(np.log10(m_pbh), np.log10(n_cl)) + '.pdf')
-            plt.close()
-        """
-        """
-        ax1 = fig1.add_subplot(2, 2, 1+j)
-        ax1.plot(n_ex_mean, x_min, 'x')
-        ax1.set_xlabel('$\sum^{N_\mathrm{clusters}}_{i=1} \overline{N}_\mathrm{ex, i}$')
-        ax1.set_ylabel('min$(x)$')
-        ax1.set_title('$N_\mathrm{cl} ' + '= 10^{:.0f}$'.format(np.log10(n_cl)) + ', $M_\mathrm{PBH} ' + '= {:.0f}$'.format(m_pbh) + '$M_\odot$')
-        """
-        """
-        ax1 = fig1.add_subplot(2, 2, 1+j)
-        ax1.plot(n_ex_poisson, x_min, 'x', alpha=0.5)
-        ax1.plot(np.mean(n_ex_poisson), np.mean(x_min), 'rx')
-        ax1.set_xlabel('$N_\mathrm{ex}$')
-        ax1.set_ylabel('min$(x)$')
-        ax1.set_title('$N_\mathrm{cl} ' + '= 10^{:.0f}$'.format(np.log10(n_cl)) + ', $M_\mathrm{PBH} ' + '= {:.0f}$'.format(m_pbh) + '$M_\odot$')
-        if n_cl < 10**6:
-            ax1.set_xlim(0, 50)
-            ax1.set_ylim(0, 0.05)
-        """
-    """
-    plt.savefig(f'{os.getcwd()}' + '/figures/small_x_test/n_ex_mean_m_pbh=1e{:.0f}'.format(np.log10(m_pbh)) + '.pdf')
-    plt.close()
-    """
-    #plt.savefig(f'{os.getcwd()}' + '/figures/small_x_test/n_ex_m_pbh=1e{:.0f}'.format(np.log10(m_pbh)) + '.pdf')
-    #plt.close()

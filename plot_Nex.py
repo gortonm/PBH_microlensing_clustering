@@ -49,7 +49,7 @@ def poisson_pmf(k, lam):
     return np.power(lam, k) * np.exp(-lam) / factorial(k)
 
 
-new_RE = True
+new_RE = False
 
 # PBH masses
 #m_pbhs = np.array([1, 100])

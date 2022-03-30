@@ -4,6 +4,19 @@ import numpy as np
 import os
 
 new_RE = True
+seed_i = False
+
+if seed_i:
+    seed_append = 'seed*i'
+else:
+    seed_append = ''
+
+if new_RE:
+    append = 'newRE' + seed_append
+    
+else:
+    append = 'oldRE' + seed_append
+
 
 if new_RE:
     from expected_events_discrete_clustered import n_ex, produce_values, load_constraints
@@ -58,8 +71,8 @@ def save(d_L, v, n_cl, m_pbh):
     """
     # Save cluster distances and speeds
     filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh)) + str(i)
-    np.savetxt(filepath + 'oldRE_dL.txt', d_L)
-    np.savetxt(filepath + 'oldRE_v.txt', v)
+    np.savetxt(filepath + append + '_dL.txt', d_L)
+    np.savetxt(filepath + append + '_v.txt', v)
     
     
             
@@ -72,15 +85,19 @@ for n_cl in n_cls:
             
             n_ex_EROS_efficiency = np.zeros(n_realisations)
             n_ex_perfect_efficiency = np.zeros(n_realisations)
-                       
-            if n_cl * m_pbh > 2**32 - 1:
-                np.random.seed(int(np.log(n_cl*m_pbh)))
-                
-            else:
-                np.random.seed(int(n_cl * m_pbh))
 
     
             for i in range(0, n_realisations):
+                
+                if seed_i:
+                    np.random.seed(int(m_pbh*n_cl*i))
+                else:
+                    if n_cl * m_pbh > 2**32 - 1:
+                        np.random.seed(int(np.log(n_cl*m_pbh)))
+                        
+                    else:
+                        np.random.seed(int(n_cl * m_pbh))
+
                 
                 d_L, v = produce_values(n_cl, m_pbh, d_s, v_c, f_pbh=f_pbh)
                 
@@ -92,11 +109,6 @@ for n_cl in n_cls:
                 n_ex_EROS_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl)    # EROS-2 efficiency curve
                 n_ex_perfect_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl, eff=False)    # Perfect efficiency
             
-            if new_RE:
-                append = 'newRE'
-                
-            else:
-                append = 'oldRE'
             np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)
             np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_perfect_efficiency)
             
