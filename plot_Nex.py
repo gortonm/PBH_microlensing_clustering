@@ -49,8 +49,6 @@ def poisson_pmf(k, lam):
     return np.power(lam, k) * np.exp(-lam) / factorial(k)
 
 
-new_RE = False
-
 # PBH masses
 #m_pbhs = np.array([1, 100])
 m_pbhs = np.array([1])
@@ -68,12 +66,6 @@ colours = ['darkorange', 'r', 'saddlebrown']    # uncomment if only using N_cl =
 
 # Uppermost value of N_obs to display in plot
 n_ex_upper = [150, 12]
-
-if new_RE:
-    append = 'newRE'
-else:
-    append = 'oldRE'
-
 
 for j, m_pbh in enumerate(m_pbhs):
     
@@ -101,8 +93,8 @@ for j, m_pbh in enumerate(m_pbhs):
     for i, n_cl in enumerate(n_cls):        
         # Load file for number of events in all realisations, for a given PBH mass and number of PBHs per cluster
         filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh))
-        n_ex_EROS_efficiency = np.loadtxt(filepath + 'n_ex_EROS_2_fpbh=1.000_1e4samples' + append + '.txt')
-        n_ex_perfect_efficiency = np.loadtxt(filepath + 'n_ex_perfect_fpbh=1.000_1e4samples' + append + '.txt')
+        n_ex_EROS_efficiency = np.loadtxt(filepath + 'n_ex_EROS_2_fpbh=1.000_1e4samples.txt')
+        n_ex_perfect_efficiency = np.loadtxt(filepath + 'n_ex_perfect_fpbh=1.000_1e4samples.txt')
       
         plt.hist(n_ex_EROS_efficiency, bins=bins, density=True, color=colours[i], histtype='step', label='$N_\mathrm{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))
         plt.hist(n_ex_perfect_efficiency, bins=bins, density=True, color=colours[i], histtype='step', linestyle='dotted')
@@ -112,5 +104,5 @@ for j, m_pbh in enumerate(m_pbhs):
     plt.ylabel('$P[N_\mathrm{obs}(f=1)]$')
     plt.tight_layout()
     plt.legend()
-            
-    plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun_1e4samples' + append + '.pdf')
+
+    #plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun_1e4samples_factor.pdf')
