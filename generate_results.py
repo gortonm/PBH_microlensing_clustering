@@ -11,7 +11,7 @@ else:
     from expected_events_discrete_clustered_oldRE import n_ex, produce_values, load_constraints
 
 # Range of PBH masses to consider (in solar masses)
-m_pbhs = 10**np.arange(0., 0.1, 1.)
+m_pbhs = 10**np.arange(1., 1.1, 1.)
 
 # Number of PBHs per cluster
 n_cls = 10**np.arange(8, 5.9, -1.)

@@ -8,9 +8,16 @@ Created on Tue Feb  8 15:23:27 2022
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from scipy.special import factorial
 from expected_events_discrete_clustered import n_ex
 import halomodel_optimised as hm
+
+new_RE = False
+
+if new_RE:
+    append = 'newRE'
+    
+else:
+    append = 'oldRE'
 
 
 # Range of PBH masses to consider
@@ -58,8 +65,8 @@ for m_pbh in m_pbhs:
             np.random.seed = int(m_pbh*n_cl)
             
             filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh)) + str(i)
-            d_L = np.loadtxt(filepath + 'updateRE_dL.txt', delimiter=',')
-            v = np.loadtxt(filepath + 'updateRE_v.txt', delimiter=',')
+            d_L = np.loadtxt(filepath + append + '_dL.txt', delimiter=',')
+            v = np.loadtxt(filepath + append + '_v.txt', delimiter=',')
 
             # calculate number of expected events
             n_ex_mean.append(n_ex(d_L, v, m_pbh, n_cl, eff=True, poisson=False))
