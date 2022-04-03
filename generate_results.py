@@ -95,15 +95,11 @@ for n_cl in n_cls:
             n_ex_EROS_efficiency = np.zeros(n_realisations)
             n_ex_perfect_efficiency = np.zeros(n_realisations)
 
-            np.random.seed(int(n_cl * m_pbh))
-
+            #np.random.seed(int(n_cl * m_pbh))
+            np.random.seed(1)
     
             for i in range(0, n_realisations):
-                
-                if seed_i:
-                    np.random.seed(int(n_cl*m_pbh*i))
-                    print(i)
-                    
+                                    
                 d_L, v = produce_values(n_cl, m_pbh, d_s, v_c, f_pbh=f_pbh)
                 
                 
@@ -112,6 +108,8 @@ for n_cl in n_cls:
                 
                 # Calculate number of expected events
                 n_ex_EROS_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl)    # EROS-2 efficiency curve
+                if i < 10:
+                    print(n_ex_EROS_efficiency[i])
                 if no_save_perfect == False:
                     n_ex_perfect_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl, eff=False)    # Perfect efficiency
             
