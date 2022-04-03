@@ -3,31 +3,40 @@
 import numpy as np
 import os
 
-new_RE = True
-seed_i = False
+new_RE = False
+seed_i = True
+no_save_perfect = False
+extended_range_mpbh = True
 
 if seed_i:
-    seed_append = 'seed*i'
+    a = '_seed_i'
 else:
-    seed_append = ''
-
+    a = ''
+    
+if extended_range_mpbh:
+    a = 'extended_range_MPBH'
+    
+if no_save_perfect:
+    a += '_nosaveperfect'
+    
 if new_RE:
-    append = 'newRE' + seed_append
+    append = 'newRE' + a
     
 else:
-    append = 'oldRE' + seed_append
+    append = 'oldRE' + a
 
-
+print(append)
 if new_RE:
     from expected_events_discrete_clustered import n_ex, produce_values, load_constraints
 else:
     from expected_events_discrete_clustered_oldRE import n_ex, produce_values, load_constraints
 
 # Range of PBH masses to consider (in solar masses)
-m_pbhs = 10**np.arange(1., 1.1, 1.)
+m_pbhs = 10**np.arange(0., 1.51, 0.5)
 
 # Number of PBHs per cluster
-n_cls = 10**np.arange(8, 5.9, -1.)
+#n_cls = 10**np.arange(6., 8.1, 1.)
+n_cls = 10**np.arange(8., 6.1, -1.)
 #n_cls = np.array([10**3])
 
 # Number of realisations for each PBH mass and cluster size
@@ -86,19 +95,15 @@ for n_cl in n_cls:
             n_ex_EROS_efficiency = np.zeros(n_realisations)
             n_ex_perfect_efficiency = np.zeros(n_realisations)
 
+            np.random.seed(int(n_cl * m_pbh))
+
     
             for i in range(0, n_realisations):
                 
                 if seed_i:
-                    np.random.seed(int(m_pbh*n_cl*i))
-                else:
-                    if n_cl * m_pbh > 2**32 - 1:
-                        np.random.seed(int(np.log(n_cl*m_pbh)))
-                        
-                    else:
-                        np.random.seed(int(n_cl * m_pbh))
-
-                
+                    np.random.seed(int(n_cl*m_pbh*i))
+                    print(i)
+                    
                 d_L, v = produce_values(n_cl, m_pbh, d_s, v_c, f_pbh=f_pbh)
                 
                 
@@ -107,8 +112,11 @@ for n_cl in n_cls:
                 
                 # Calculate number of expected events
                 n_ex_EROS_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl)    # EROS-2 efficiency curve
-                n_ex_perfect_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl, eff=False)    # Perfect efficiency
+                if no_save_perfect == False:
+                    n_ex_perfect_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl, eff=False)    # Perfect efficiency
             
             np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)
-            np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_perfect_efficiency)
+            if no_save_perfect == False:
+                np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_perfect_efficiency)
             
+np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)
