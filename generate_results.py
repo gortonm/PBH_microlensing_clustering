@@ -4,9 +4,11 @@ import numpy as np
 import os
 
 new_RE = False
-seed_i = True
+seed_i = False
 no_save_perfect = False
-extended_range_mpbh = True
+extended_range_mpbh = False
+log10 = True
+
 
 if seed_i:
     a = '_seed_i'
@@ -18,6 +20,9 @@ if extended_range_mpbh:
     
 if no_save_perfect:
     a += '_nosaveperfect'
+    
+if log10:
+    a += 'log10'
     
 if new_RE:
     append = 'newRE' + a
@@ -102,16 +107,16 @@ for n_cl in n_cls:
             #np.random.seed(8032022) # no
             #np.random.seed(1000000) # no
             #np.random.seed(int(np.log(m_pbh * n_cl))) # no
-            np.random.seed(int(np.log10(m_pbh * n_cl))) # no
+            np.random.seed(int(np.log10(m_pbh * n_cl)))
     
             for i in range(0, n_realisations):
                                     
                 d_L, v = produce_values(n_cl, m_pbh, d_s, v_c, f_pbh=f_pbh)
                 
-                
+                """
                 if n_cl >= 10**3:   # don't save cluster distances and speeds for small cluster sizes, since this uses a very large amount of storage space
                     save(d_L, v, n_cl, m_pbh)
-                
+                """
                 # Calculate number of expected events
                 n_ex_EROS_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl)    # EROS-2 efficiency curve
                 if i < 10:
@@ -123,4 +128,4 @@ for n_cl in n_cls:
             if no_save_perfect == False:
                 np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_perfect_efficiency)
             
-#np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)
+np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)
