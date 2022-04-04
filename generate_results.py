@@ -35,8 +35,10 @@ else:
 m_pbhs = 10**np.arange(0., 1.51, 0.5)
 
 # Number of PBHs per cluster
-#n_cls = 10**np.arange(6., 8.1, 1.)
-n_cls = 10**np.arange(8., 6.1, -1.)
+
+# need to run for N_cl = 1e8 and 1e7 separately to generate the exact outputs required
+#n_cls = 10**np.arange(8., 7.1, 1.)
+n_cls = 10**np.arange(7., 6.1, -1.)
 #n_cls = np.array([10**3])
 
 # Number of realisations for each PBH mass and cluster size
@@ -83,7 +85,11 @@ def save(d_L, v, n_cl, m_pbh):
     np.savetxt(filepath + append + '_dL.txt', d_L)
     np.savetxt(filepath + append + '_v.txt', v)
     
-    
+
+#np.random.seed(1) 
+#np.random.seed(8032022)
+#np.random.seed(1000000)
+
             
 # Produce a sample of cluster line of sight distances and speeds
 for n_cl in n_cls:
@@ -96,7 +102,11 @@ for n_cl in n_cls:
             n_ex_perfect_efficiency = np.zeros(n_realisations)
 
             #np.random.seed(int(n_cl * m_pbh))
-            np.random.seed(1)
+            #np.random.seed(1) # no
+            #np.random.seed(8032022) # no
+            #np.random.seed(1000000) # no
+            #np.random.seed(int(np.log(m_pbh * n_cl))) # no
+            np.random.seed(int(np.log10(m_pbh * n_cl))) # no
     
             for i in range(0, n_realisations):
                                     
@@ -117,4 +127,4 @@ for n_cl in n_cls:
             if no_save_perfect == False:
                 np.savetxt(filepath + 'n_ex_perfect_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_perfect_efficiency)
             
-np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)
+#np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)

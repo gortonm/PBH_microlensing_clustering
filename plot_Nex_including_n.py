@@ -118,11 +118,9 @@ for j, m_pbh in enumerate(m_pbhs):
     
     for i, n_cl in enumerate(n_cls):        
         filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh))
-        # Load file for number of events in all realisations, for a given PBH mass and number of PBHs per cluster
-        n_ex_EROS_efficiency = np.loadtxt(filepath + 'n_ex_EROS_2_fpbh=1.000_1e4samples' + append + '.txt')
-        n_ex_perfect_efficiency = np.loadtxt(filepath + 'n_ex_perfect_fpbh=1.000_1e4samples' + append + '.txt')
         
-        # replace the first values of the outputs with the result obtained if using a seed n_cl * m_pbh * i
+        # Load file for number of events in all realisations, for a given PBH mass and number of PBHs per cluster        
+        # Replace the first values of the outputs with the result obtained if using a seed n_cl * m_pbh * i
         if seed_i:
             n_ex_EROS_efficiency = np.loadtxt(filepath + 'n_ex_EROS_2_fpbh=1.000_1e4samples' + 'oldRE' + '.txt')
             n_ex_perfect_efficiency = np.loadtxt(filepath + 'n_ex_perfect_fpbh=1.000_1e4samples' + 'oldRE' + '.txt')
@@ -134,11 +132,11 @@ for j, m_pbh in enumerate(m_pbhs):
             while k < n[i]:
                 n_ex_EROS_efficiency[k] = n_ex_EROS_efficiency_seed_i[k]
                 k += 1 
-        """
+        
         else:
             n_ex_EROS_efficiency = np.loadtxt(filepath + 'n_ex_EROS_2_fpbh=1.000_1e4samples' + append + '.txt')
             n_ex_perfect_efficiency = np.loadtxt(filepath + 'n_ex_perfect_fpbh=1.000_1e4samples' + append + '.txt')
-        """
+
         plt.hist(n_ex_EROS_efficiency, bins=bins, density=True, color=colours[i], histtype='step', label='$N_\mathrm{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))
         plt.hist(n_ex_perfect_efficiency, bins=bins, density=True, color=colours[i], histtype='step', linestyle='dotted')
                  

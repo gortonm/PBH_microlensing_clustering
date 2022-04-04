@@ -41,7 +41,7 @@ mpl.rc('text', usetex=True)
 mpl.rcParams['legend.edgecolor'] = 'lightgrey'
 
 # Range of PBH masses to consider
-m_pbhs = np.array([1])
+m_pbhs = np.array([1, 10])
 
 # Uppermost values of the event duration to plot, in days
 upper = np.array([300, 1000, 2500])
@@ -52,12 +52,13 @@ n_cls = 10**np.arange(6, 6.1, 1.)    # for Fig. 1, only show N_cl = 1e5
 
 # choose realisations to plot (these depend on the PBH mass)
 #realisations_ncl_1e5_mpbh_1 = np.array([0, 1, 607])
-r_smallx = 520
+r_smallx = 607
 realisations_ncl_1e5_mpbh_1 = np.array([0, 1, r_smallx])
 realisations_ncl_1e5_mpbh_10 = np.array([0, 1, 847])
 #realisations = np.array([0,1,2])
 scale=1
 
+print(append)
 for k, m_pbh in enumerate(m_pbhs):
     
     # import relevant comparison curve for the event duration distribution
@@ -117,4 +118,4 @@ for k, m_pbh in enumerate(m_pbhs):
         plt.ylabel(r'$10^{:.0f}'.format(np.log10(scale)) + '\mathrm{d}\Gamma / \mathrm{d} \hat{t}$ (years)$^{-2}$', fontsize='16', labelpad=10)
 
         plt.tight_layout()
-        plt.savefig(f'{os.getcwd()}' + '/figures/event_duration_distributions/n_cl=1e{:.0f}_mpbh=1e{:.0f}'.format(np.log10(n_cl), np.log10(m_pbh)) + append + '_smallestx.pdf')
+        #plt.savefig(f'{os.getcwd()}' + '/figures/event_duration_distributions/n_cl=1e{:.0f}_mpbh=1e{:.0f}'.format(np.log10(n_cl), np.log10(m_pbh)) + append + '_smallestx.pdf')
