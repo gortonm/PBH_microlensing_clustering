@@ -32,14 +32,10 @@ else:
     from expected_events_discrete_clustered_oldRE import n_ex, produce_values, load_constraints
 
 # Range of PBH masses to consider (in solar masses)
-m_pbhs = 10**np.arange(0., 1.51, 0.5)
+m_pbhs = 10**np.arange(0., 0.1, 0.5)
 
 # Number of PBHs per cluster
-
-# need to run for N_cl = 1e8 and 1e7 separately to generate the exact outputs required
-#n_cls = 10**np.arange(8., 7.1, 1.)
-n_cls = 10**np.arange(7., 6.1, -1.)
-#n_cls = np.array([10**3])
+n_cls = 10**np.arange(8., 6.1, -1.)
 
 # Number of realisations for each PBH mass and cluster size
 n_realisations = 10000
