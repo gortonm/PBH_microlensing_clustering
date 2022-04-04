@@ -40,7 +40,7 @@ else:
 m_pbhs = 10**np.arange(0., 0.1, 0.5)
 
 # Number of PBHs per cluster
-n_cls = 10**np.arange(8., 6.1, -1.)
+n_cls = 10**np.arange(8., 6.9, -1.)
 
 # Number of realisations for each PBH mass and cluster size
 n_realisations = 10000
@@ -107,10 +107,10 @@ for n_cl in n_cls:
             #np.random.seed(8032022) # no
             #np.random.seed(1000000) # no
             #np.random.seed(int(np.log(m_pbh * n_cl))) # no
-            np.random.seed(int(np.log10(m_pbh * n_cl)))
+            np.random.seed(int(np.log10(m_pbh * n_cl))) # yes for N_cl = 1e7, 1e8, not for N_cl = 1e6
+            #np.random.seed(int(np.log(m_pbh * n_cl))) # not for N_cl = 1e6
     
-            for i in range(0, n_realisations):
-                                    
+            for i in range(0, n_realisations):                                    
                 d_L, v = produce_values(n_cl, m_pbh, d_s, v_c, f_pbh=f_pbh)
                 
                 """
@@ -123,6 +123,8 @@ for n_cl in n_cls:
                     print(n_ex_EROS_efficiency[i])
                 if no_save_perfect == False:
                     n_ex_perfect_efficiency[i] = n_ex(d_L, v, m_pbh, n_cl, eff=False)    # Perfect efficiency
+                if n_cl == 1e6 and i == 607:
+                    print(d_L[0:20])
             
             np.savetxt(filepath + 'n_ex_EROS_2_fpbh={0:.3f}_1e4samples'.format(f_pbh) + append +'.txt', n_ex_EROS_efficiency)
             if no_save_perfect == False:

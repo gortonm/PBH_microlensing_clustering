@@ -50,6 +50,31 @@ def poisson_pmf(k, lam):
 
 
 new_RE = False
+seed_i = False
+no_save_perfect = False
+extended_range_mpbh = False
+log10 = True
+
+
+if seed_i:
+    a = '_seed_i'
+else:
+    a = ''
+    
+if extended_range_mpbh:
+    a = 'extended_range_MPBH'
+    
+if no_save_perfect:
+    a += '_nosaveperfect'
+    
+if log10:
+    a += 'log10'
+    
+if new_RE:
+    append = 'newRE' + a
+    
+else:
+    append = 'oldRE' + a
 
 # PBH masses
 #m_pbhs = np.array([1, 100])
@@ -57,7 +82,7 @@ m_pbhs = np.array([1])
 
 # Nimbers of PBHs per cluster to consider
 #n_cls = 10**np.arange(4, 8.1, 1.)
-n_cls = 10**np.arange(6, 8.1, 1.)   # uncomment if only using N_cl = 1e6, 1e7, 1e8
+n_cls = 10**np.arange(7, 8.1, 1.)   # uncomment if only using N_cl = 1e6, 1e7, 1e8
 
 # Number of realisations for each PBH mass and number of PBHs per cluster
 n_realisations = 10000
@@ -68,11 +93,6 @@ colours = ['darkorange', 'r', 'saddlebrown']    # uncomment if only using N_cl =
 
 # Uppermost value of N_obs to display in plot
 n_ex_upper = [150, 12]
-
-if new_RE:
-    append = 'newRE'
-else:
-    append = 'oldRE'
 
 
 for j, m_pbh in enumerate(m_pbhs):
