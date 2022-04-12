@@ -8,14 +8,14 @@ import csv
 import time
 
 # Boolean controlling whether to use EROS-2 efficiency function and exposure
-EROS2_eff = False
+EROS2_eff = True
 
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
 
 # Cluster parameters
-n_cl = 1e5  # Number of PBHs per cluster
-m_pbh = 1e3  # PBH mass, in solar masses
+n_cl = 1e6  # Number of PBHs per cluster
+m_pbh = 10  # PBH mass, in solar masses
 speed_conversion = 1.022704735e-6  # conversion factor from km/s to pc/yr
 
 # Astrophysical parameters
