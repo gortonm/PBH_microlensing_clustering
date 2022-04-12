@@ -120,7 +120,7 @@ plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = mean_smooth_perfect), color='k
 
 plt.xlim(0, n_ex_upper)
 plt.xlabel('$N_\mathrm{obs}$')
-plt.ylabel('$P[N_\mathrm{obs}(f_\mathrm{PBH} = 1)]$')
+plt.ylabel('$P[N_\mathrm{obs}(f = 1)]$')
 plt.tight_layout()
 plt.legend()
-plt.savefig('P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun.pdf')
+plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun.pdf')

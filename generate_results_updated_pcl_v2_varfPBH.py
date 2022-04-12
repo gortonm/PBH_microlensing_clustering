@@ -699,7 +699,7 @@ for f_pbh in f_pbhs:
             event_rate_values_uncorrected = event_rate_values_uncorrected[d_values < r_cone(dL_values)]
             total_event_rate_values_uncorrected = np.sum(event_rate_values_uncorrected)
 
-            if i % 1000 == 0:
+            if i % 10000 == 0:
                 print(i)
                 print('Length of corrected samples = ', len(t_hat_values_corrected))
 

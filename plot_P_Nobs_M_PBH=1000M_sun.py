@@ -111,14 +111,14 @@ for i, n_cl in enumerate(n_cls):
     """
     
     filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh))
-    n_ex = np.loadtxt(filename_Nobs_corrected + 'n_ex_cutoff=200d_fpbh=1.0000.txt')
+    n_ex = np.loadtxt(filename_Nobs_corrected)
     plt.hist(n_ex, bins=bins, density=True, color=colours[i], histtype='step', label='$N_\mathrm{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))
 
 plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = 39.5), color='k', linestyle='dashed')
 
 plt.xlim(0, n_ex_upper)
 plt.xlabel('$N_\mathrm{obs}$')
-plt.ylabel('$P[N_\mathrm{obs}(f_\mathrm{PBH} = 1)]$')
+plt.ylabel('$P[N_\mathrm{obs}(f = 1)]$')
 plt.tight_layout()
 plt.legend()
-plt.savefig('P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun.pdf')
+plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun.pdf')
