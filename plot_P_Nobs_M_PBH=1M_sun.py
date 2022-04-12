@@ -46,7 +46,7 @@ def poisson_pmf(k, lam):
 
 
 # Boolean controlling whether to use EROS-2 efficiency function and exposure
-EROS2_eff = False
+EROS2_eff = True
 
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
@@ -110,8 +110,8 @@ for i, n_cl in enumerate(n_cls):
     
     
     filepath = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh))
-    n_ex_EROS_efficiency = np.loadtxt(filepath + filename_Nobs_corrected)
-    n_ex_perfect_efficiency = np.loadtxt(filepath + filename_Nobs_perfect)
+    n_ex_EROS_efficiency = np.loadtxt(filename_Nobs_corrected)
+    n_ex_perfect_efficiency = np.loadtxt( filename_Nobs_perfect)
     plt.hist(n_ex_EROS_efficiency, bins=bins, density=True, color=colours[i], histtype='step', label='$N_\mathrm{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))
     plt.hist(n_ex_perfect_efficiency, bins=bins, density=True, color=colours[i], histtype='step', linestyle='dotted')
 

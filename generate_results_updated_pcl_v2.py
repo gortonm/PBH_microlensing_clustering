@@ -14,7 +14,7 @@ EROS2_eff = False
 set_rcl_10 = True
 
 # Cluster parameters
-n_cl = 1e3  # Number of PBHs per cluster
+n_cl = 1e5  # Number of PBHs per cluster
 m_pbh = 1e3  # PBH mass, in solar masses
 speed_conversion = 1.022704735e-6  # conversion factor from km/s to pc/yr
 
@@ -577,7 +577,7 @@ def calculate_n_obs(t_hat_values, event_rate_values, eff=True):
     for j in range(len(t_hat_values)):
         if eff == False:
             mean = exposure_EROS * event_rate_values[j]
-        if EROS2_eff:
+        elif EROS2_eff:
             mean = exposure_EROS * event_rate_values[j] * eff_EROS2(t_hat_values[j])
         else:
             mean = exposure_MEMO * event_rate_values[j] * eff_top_hat(t_hat_values[j])

@@ -34,7 +34,7 @@ b = -2 * r_0 * np.cos(np.radians(b_coord)) * np.cos(np.radians(l_coord)) / d_s
 omega = (84 * (np.pi / 180) ** 2)  # 84 deg^2 observing area, converted to radians^2, for EROS-2 (Tisserand+ 2007 Abstract)
 
 # Number of realisations for each PBH mass and cluster size
-n_realisations = 10000
+n_realisations = 300000
 
 # Solid angle subtended by the LMC, in square radians
 omega = 84 * (np.pi / 180) ** 2
@@ -672,7 +672,7 @@ for f_pbh in f_pbhs:
         )
         
         n_obs_values_corrected = []
-        n_obs_values_perfect = []
+        #n_obs_values_perfect = []
         total_event_rate_values_uncorrected = []
         
         for i in range(0, n_realisations):
@@ -688,12 +688,12 @@ for f_pbh in f_pbhs:
             event_rate_values_uncorrected = calculate_event_rate_uncorrected(dL_values, v_values)
             
             # Save relevant data
-            save_cluster_data(dL_values, v_values, d_values, t_hat_values_corrected, event_rate_values_uncorrected, f_cl_values, i)
+            #save_cluster_data(dL_values, v_values, d_values, t_hat_values_corrected, event_rate_values_uncorrected, f_cl_values, i)
             
             # Include area correction factor for calculating the event rate
             event_rate_values_corrected = f_cl_values * event_rate_values_uncorrected
             n_obs_values_corrected.append(calculate_n_obs(t_hat_values_corrected, event_rate_values_corrected))
-            n_obs_values_perfect.append(calculate_n_obs(t_hat_values_corrected, event_rate_values_corrected, eff=False))
+            #n_obs_values_perfect.append(calculate_n_obs(t_hat_values_corrected, event_rate_values_corrected, eff=False))
            
             t_hat_values_uncorrected = t_hat_values_corrected[d_values < r_cone(dL_values)]
             event_rate_values_uncorrected = event_rate_values_uncorrected[d_values < r_cone(dL_values)]
@@ -707,7 +707,7 @@ for f_pbh in f_pbhs:
         #print('Mean total event rate (uncorrected) = ', np.mean(total_event_rate_values_uncorrected))
                 
         np.savetxt(filename_Nobs_corrected, n_obs_values_corrected)
-        np.savetxt(filename_Nobs_perfect, n_obs_values_perfect)
+        #np.savetxt(filename_Nobs_perfect, n_obs_values_perfect)
         
         print('Mean number of observed events (f_PBH = {:0.1f}) = '.format(f_pbh), np.mean(n_obs_values_corrected))
 
