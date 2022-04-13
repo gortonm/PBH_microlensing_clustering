@@ -1,5 +1,6 @@
 import numpy as np
 import os
+from generate_results_updated_pcl_v2 import r_cone
 
 set_rcl_10 = True
 EROS2_eff = True
@@ -16,7 +17,7 @@ n_realisations = 10000
 
 # Flag samples containing clusters with a fractional line of sight distance
 # smaller than this value
-x_min = 0.01
+x_min = 0.005
 
 realisations = []
 
@@ -44,9 +45,7 @@ def convert_to_array(x):
 
 
 for i in range(n_realisations):
-    
-    np.random.seed = int(m_pbh*n_cl)
-    
+        
     # Load data from csv file
     filename = filepath + str(i) + append + ".csv"    
     data = np.genfromtxt(filename, delimiter=',')
@@ -62,9 +61,21 @@ for i in range(n_realisations):
         data_transpose = np.transpose(data)
        
     d_L = convert_to_array(data_transpose[0])
+    d = convert_to_array(data_transpose[2])
+    event_rate = convert_to_array(data_transpose[3])
+    f_cl = convert_to_array(data_transpose[5])
+    
+    dL_uncorrected = d_L[d < r_cone(d_L)]
+    f_cl_uncorrected = f_cl[d < r_cone(d_L)]
+    event_rate_uncorrected = event_rate[d < r_cone(d_L)]
     
     if min(np.array(d_L)) / d_s < x_min:
-        print('i = {:.0f}'.format(i) + ', min(x) = {:.5f}'.format(min(d_L)/50e3))    
+        print('i = {:.0f}'.format(i) + ', min(x) = {:.5f}'.format(min(d_L)/50e3))
+        k = np.argmin(d_L)
+        print('f_cl = ', f_cl[k])
+        print('D_L [pc] = ', d_L[k])
+        print('Event rate / f_cl [yr^{1}] = ', event_rate[k])
+
         realisations.append(i)
 
 print(realisations)

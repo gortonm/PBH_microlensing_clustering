@@ -15,7 +15,7 @@ set_rcl_10 = True
 
 # Cluster parameters
 n_cl = 1e3  # Number of PBHs per cluster
-m_pbh = 1e3  # PBH mass, in solar masses
+m_pbh = 1e2  # PBH mass, in solar masses
 speed_conversion = 1.022704735e-6  # conversion factor from km/s to pc/yr
 
 # Astrophysical parameters
@@ -612,11 +612,11 @@ tic = time.perf_counter()
 
 
 # later test case for M_PBH = 1000 M_\odot, N_cl = 1000
-f_pbhs = np.arange(0.094, 0.0976, 0.0001)
+#f_pbhs = np.arange(0.094, 0.0976, 0.0001)
 
 # initial test case for M_PBH = 1000 M_\odot, N_cl = 1000
 # f_pbhs = np.arange(0.020, 0.03, 0.001)
-# f_pbhs = np.arange(0.0200, 0.022, 0.0001)
+f_pbhs = np.arange(0.0200, 0.022, 0.0001)
 
 
 # Run to generate a large number of line of sight distances only, for checking
