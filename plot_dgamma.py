@@ -138,4 +138,4 @@ for k, m_pbh in enumerate(m_pbhs):
     plt.ylabel(r'$10^{:.0f}'.format(np.log10(scale)) + '\mathrm{d}\Gamma / \mathrm{d} \hat{t}$ (years)$^{-2}$', fontsize='16', labelpad=10)
 
     plt.tight_layout()
-    plt.savefig(f'{os.getcwd()}' + '/figures/n_cl=1e{:.0f}_mpbh=1e{:.0f}'.format(np.log10(n_cl), np.log10(m_pbh)) + '_smallestx.pdf')
+    plt.savefig(f'{os.getcwd()}' + '/figures/differential_event_rate_n_cl=1e{:.0f}_Mpbh={:.0f}'.format(np.log10(n_cl), m_pbh) + 'Msun.pdf')

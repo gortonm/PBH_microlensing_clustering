@@ -77,7 +77,7 @@ n_ex_upper = 100
         
 # Set up figure and bins for histogram
 bins = np.arange(0, 1000, 1)
-plt.figure(figsize=(5.5, 4.5))
+plt.figure(figsize=(5, 4))
 
 
 
@@ -121,4 +121,4 @@ plt.xlabel('$N_\mathrm{obs}$')
 plt.ylabel('$P[N_\mathrm{obs}(f = 1)]$')
 plt.tight_layout()
 plt.legend()
-plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun.pdf')
+plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun_1e4samples.pdf')

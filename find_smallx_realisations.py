@@ -3,10 +3,10 @@ import os
 from generate_results_updated_pcl_v2 import r_cone
 
 set_rcl_10 = True
-EROS2_eff = True
+EROS2_eff = False
 
-n_cl = 1e6  # Number of PBHs per cluster
-m_pbh = 1  # PBH mass, in solar masses
+n_cl = 1e3  # Number of PBHs per cluster
+m_pbh = 1e3  # PBH mass, in solar masses
 speed_conversion = 1.022704735e-6  # conversion factor from km/s to pc/yr
 
 # Astrophysical parameters
@@ -69,11 +69,11 @@ for i in range(n_realisations):
     f_cl_uncorrected = f_cl[d < r_cone(d_L)]
     event_rate_uncorrected = event_rate[d < r_cone(d_L)]
     
-    if min(np.array(d_L)) / d_s < x_min:
-        print('i = {:.0f}'.format(i) + ', min(x) = {:.5f}'.format(min(d_L)/50e3))
-        k = np.argmin(d_L)
-        print('f_cl = ', f_cl[k])
-        print('D_L [pc] = ', d_L[k])
+    if min(np.array(dL_uncorrected)) / d_s < x_min:
+        print('i = {:.0f}'.format(i) + ', min(x) = {:.5f}'.format(min(dL_uncorrected)/50e3))
+        k = np.argmin(dL_uncorrected)
+        print('f_cl = ', f_cl_uncorrected[k])
+        print('D_L [pc] = ', dL_uncorrected[k])
         print('Event rate / f_cl [yr^{1}] = ', event_rate[k])
 
         realisations.append(i)
