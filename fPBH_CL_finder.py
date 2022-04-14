@@ -15,11 +15,22 @@ EROS2_eff = False
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
 
+sin_theta = True
+
+tan_theta = False
+
+
+
+
 append = ""
 if set_rcl_10:
     append += "_rcl10_"
 if EROS2_eff:
     append += "_EROS2_"
+if sin_theta:
+    append += "_sin_"
+if tan_theta:
+    append += "_tan_"
 
 
 # Set number of PBHs per cluster and PBH mass (in solar masses)
@@ -59,7 +70,7 @@ f_pbhs = np.arange(0.0200, 0.022, 0.0001)
 
 #f_pbhs = np.arange(0.09, 0.101, 0.001)
 #f_pbhs = np.arange(0.095, 0.09, 0.0001)
-#f_pbhs = np.arange(0.094, 0.0976, 0.0001)
+#f_pbhs = np.arange(0.095, 0.0976, 0.0001)
 
 for f_pbh in f_pbhs:
     

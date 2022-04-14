@@ -31,11 +31,20 @@ EROS2_eff = True
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
 
+sin_theta = True
+
+tan_theta = False
+
 append = ""
 if set_rcl_10:
     append += "_rcl10_"
 if EROS2_eff:
     append += "_EROS2_"
+if sin_theta:
+    append += "_sin_"
+if tan_theta:
+    append += "_tan_"
+
 
 f_pbh = 1
 x_max = 1
@@ -138,4 +147,5 @@ for k, m_pbh in enumerate(m_pbhs):
     plt.ylabel(r'$10^{:.0f}'.format(np.log10(scale)) + '\mathrm{d}\Gamma / \mathrm{d} \hat{t}$ (years)$^{-2}$', fontsize='16', labelpad=10)
 
     plt.tight_layout()
-    plt.savefig(f'{os.getcwd()}' + '/figures/differential_event_rate_n_cl=1e{:.0f}_Mpbh={:.0f}'.format(np.log10(n_cl), m_pbh) + 'Msun.pdf')
+    plt.savefig(f'{os.getcwd()}' + '/figures/differential_event_rate_Ncl=1e{:.0f}_Mpbh={:.0f}'.format(np.log10(n_cl), m_pbh) + 'Msun' + append + '.pdf')
+    plt.savefig(f'{os.getcwd()}' + '/figures/differential_event_rate_Ncl=1e{:.0f}_Mpbh={:.0f}'.format(np.log10(n_cl), m_pbh) + 'Msun' + '.pdf')

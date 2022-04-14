@@ -51,11 +51,18 @@ EROS2_eff = False
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
 
+sin_theta = True
+tan_theta = False
+
 append = ""
 if set_rcl_10:
     append += "_rcl10_"
 if EROS2_eff:
     append += "_EROS2_"
+if sin_theta:
+    append += "_sin_"
+if tan_theta:
+    append += "_tan_"
 
 
 f_pbh = 1
@@ -79,7 +86,7 @@ n_ex_upper = 100
 bins = np.arange(0, 1000, 1)
 plt.figure(figsize=(5, 4))
 
-
+plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = 39.5), color='k', linestyle='dashed')
 
 
 # Add Poisson probability mass function for mean value from smooth case    
@@ -114,11 +121,11 @@ for i, n_cl in enumerate(n_cls):
     n_ex = np.loadtxt(filename_Nobs_corrected)
     plt.hist(n_ex, bins=bins, density=True, color=colours[i], histtype='step', label='$N_\mathrm{cl} = $'+'$10^{:.0f}$'.format(np.log10(n_cl)))
 
-plt.plot(poisson_pmf(np.arange(0, 101, 1.), lam = 39.5), color='k', linestyle='dashed')
 
 plt.xlim(0, n_ex_upper)
 plt.xlabel('$N_\mathrm{obs}$')
 plt.ylabel('$P[N_\mathrm{obs}(f = 1)]$')
 plt.tight_layout()
 plt.legend()
-plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun_1e4samples.pdf')
+plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun_1e4samples' + append + '.pdf')
+plt.savefig(f'{os.getcwd()}' + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh)) + 'Msun_1e4samples' + '.pdf')

@@ -13,9 +13,14 @@ EROS2_eff = False
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
 
+sin_theta = False
+
+tan_theta = True
+
+
 # Cluster parameters
 n_cl = 1e3  # Number of PBHs per cluster
-m_pbh = 1e2  # PBH mass, in solar masses
+m_pbh = 1e2  # PBH mass, in Truesolar masses
 speed_conversion = 1.022704735e-6  # conversion factor from km/s to pc/yr
 
 # Astrophysical parameters
@@ -38,6 +43,9 @@ n_realisations = 300000
 
 # Solid angle subtended by the LMC, in square radians
 omega = 84 * (np.pi / 180) ** 2
+
+theta_LMC = np.sqrt(omega/np.pi)
+
 
 # Exposure for observing the LMC, in star yr (EROS-2)
 exposure_EROS = 3.77e7
@@ -214,7 +222,12 @@ def r_cone(d_L):
         Radius of microlensing cone at d_L, in pc.
 
     """
-    return d_L * np.sqrt(omega / np.pi)
+    if sin_theta:
+        return d_L * np.sin(theta_LMC)
+    if tan_theta:
+        return d_L * np.tan(theta_LMC)
+    else:
+        return d_L * np.sqrt(omega / np.pi)
 
 
 def generate_d(r_samp):
@@ -447,6 +460,10 @@ def save_cluster_data(dL_values, v_values, d_values, t_hat_values, event_rate_va
         append += "_rcl10_"
     if EROS2_eff:
         append += "_EROS2_"
+    if sin_theta:
+        append += "_sin_"
+    if tan_theta:
+        append += "_tan_"
 
     header = "D_L [yr], v [pc/yr], d [pc], Event rate [yr^{-1}], Event duration [yr], Fractional area correction"
     tosave = np.column_stack(
@@ -654,6 +671,10 @@ for f_pbh in f_pbhs:
             append += "_rcl10_"
         if EROS2_eff:
             append += "_EROS2_"
+        if sin_theta:
+            append += "_sin_"
+        if tan_theta:
+            append += "_tan_"
         
         filename_Nobs_corrected = (
             filepath

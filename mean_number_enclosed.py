@@ -10,7 +10,7 @@ import numpy as np
 import os
 
 # Boolean controlling whether to use EROS-2 efficiency function and exposure
-EROS2_eff = False
+EROS2_eff = True
 
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
@@ -43,7 +43,7 @@ if EROS2_eff:
     append += "_EROS2_"
 
 if EROS2_eff:
-    m_pbh = 10
+    m_pbh = 1
     n_cls = 10**np.arange(6, 8.1, 1)
     
 else:
@@ -61,12 +61,15 @@ for n_cl in n_cls:
         filename = f'{os.getcwd()}' + '/simulated_data_constraints/N_cl/{0:.2f}'.format(np.log10(n_cl)) + '/M_PBH/{0:.2f}/'.format(np.log10(m_pbh)) + "cluster_data_update_pcl_" + str(r) + append + ".csv"    
         
         data = np.genfromtxt(filename, delimiter=',')
-        dL = np.transpose(data)[0]
-        dL_truncated = dL[dL < x_max * d_s]
         
         if len(data) == 0:
             n_clusters_mean_extended += 0
         else:
+            dL = np.transpose(data)[0]
+            dL_truncated = dL[dL < x_max * d_s]
             n_clusters_mean_extended += len(dL_truncated) / n_realisations
     
     print('Number of clusters in extended sample / Number of clusters in microlensing cone = ', n_clusters_mean_extended / n_clusters_analytic)
+
+
+print(calculate_mass_cone_analytic(x_max))
