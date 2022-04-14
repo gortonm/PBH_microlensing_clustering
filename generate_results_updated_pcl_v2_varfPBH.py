@@ -13,14 +13,14 @@ EROS2_eff = False
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
 
-sin_theta = False
+sin_theta = True
 
-tan_theta = True
+tan_theta = False
 
 
 # Cluster parameters
 n_cl = 1e3  # Number of PBHs per cluster
-m_pbh = 1e2  # PBH mass, in Truesolar masses
+m_pbh = 1e3  # PBH mass, in Truesolar masses
 speed_conversion = 1.022704735e-6  # conversion factor from km/s to pc/yr
 
 # Astrophysical parameters
@@ -39,7 +39,7 @@ b = -2 * r_0 * np.cos(np.radians(b_coord)) * np.cos(np.radians(l_coord)) / d_s
 omega = (84 * (np.pi / 180) ** 2)  # 84 deg^2 observing area, converted to radians^2, for EROS-2 (Tisserand+ 2007 Abstract)
 
 # Number of realisations for each PBH mass and cluster size
-n_realisations = 300000
+n_realisations = 100000
 
 # Solid angle subtended by the LMC, in square radians
 omega = 84 * (np.pi / 180) ** 2
@@ -629,11 +629,11 @@ tic = time.perf_counter()
 
 
 # later test case for M_PBH = 1000 M_\odot, N_cl = 1000
-#f_pbhs = np.arange(0.094, 0.0976, 0.0001)
+f_pbhs = np.arange(0.0945, 0.095, 0.0001)
 
 # initial test case for M_PBH = 1000 M_\odot, N_cl = 1000
 # f_pbhs = np.arange(0.020, 0.03, 0.001)
-f_pbhs = np.arange(0.0200, 0.022, 0.0001)
+#f_pbhs = np.arange(0.0200, 0.022, 0.0001)
 
 
 # Run to generate a large number of line of sight distances only, for checking

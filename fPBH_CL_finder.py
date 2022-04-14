@@ -34,7 +34,7 @@ if tan_theta:
 
 
 # Set number of PBHs per cluster and PBH mass (in solar masses)
-n_cl, m_pbh = 1e3, 1e2
+n_cl, m_pbh = 1e3, 1e3
 n_realisations = 300000
 
 # Find probability corresponding to a given value of N_obs
@@ -66,11 +66,11 @@ def f_pbh_proability_function(f_pbh):
     return prob_new - 0.05
     
 #f_pbhs=np.arange(0.020, 0.03, 0.001)
-f_pbhs = np.arange(0.0200, 0.022, 0.0001)
+#f_pbhs = np.arange(0.0200, 0.022, 0.0001)
 
 #f_pbhs = np.arange(0.09, 0.101, 0.001)
 #f_pbhs = np.arange(0.095, 0.09, 0.0001)
-#f_pbhs = np.arange(0.095, 0.0976, 0.0001)
+f_pbhs = np.arange(0.0945, 0.0976, 0.0001)
 
 for f_pbh in f_pbhs:
     

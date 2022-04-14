@@ -31,7 +31,7 @@ EROS2_eff = True
 # Boolean controlling whether to set PBH cluster radius to 10 pc
 set_rcl_10 = True
 
-sin_theta = True
+sin_theta = False
 
 tan_theta = False
 
