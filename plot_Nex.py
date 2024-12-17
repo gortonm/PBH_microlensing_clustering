@@ -49,32 +49,7 @@ def poisson_pmf(k, lam):
     return np.power(lam, k) * np.exp(-lam) / factorial(k)
 
 
-new_RE = False
-seed_i = False
-no_save_perfect = False
-extended_range_mpbh = False
-log10 = True
-
-
-if seed_i:
-    a = '_seed_i'
-else:
-    a = ''
-    
-if extended_range_mpbh:
-    a = 'extended_range_MPBH'
-    
-if no_save_perfect:
-    a += '_nosaveperfect'
-    
-if log10:
-    a += 'log10'
-    
-if new_RE:
-    append = 'newRE' + a
-    
-else:
-    append = 'oldRE' + a
+append = 'newRE'
 
 # PBH masses
 #m_pbhs = np.array([1, 100])
