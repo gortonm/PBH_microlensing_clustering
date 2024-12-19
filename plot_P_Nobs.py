@@ -161,4 +161,4 @@ plt.legend()
 
 plt.savefig(f'{os.getcwd()}'
             + '/figures/P(N_obs)_Mpbh={:.0f}'.format((m_pbh))
-            + 'Msun_1e4samples' + append + '.pdf')
+            + 'Msun_1e4samples' + '.pdf')
