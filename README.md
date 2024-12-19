@@ -19,7 +19,3 @@ Python 3
 
 # License
 This project is licensed under the MIT License - see the LICENSE.md file for details.
-
-
-### UserWarning: A NumPy version >=1.16.5 and <1.23.0 is required for this version of SciPy (detected version 1.24.3
-
