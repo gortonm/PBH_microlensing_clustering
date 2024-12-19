@@ -9,15 +9,17 @@ The code, plots etc. are arranged as follows
 
 * `data_files` Includes files required to calculate constraints for the case of smoothly-distributed DM (which has been previously considered in the literature and provides a comparison) and the differential event rate for 
 smoothly-distributed DM.
-* `Figures` Includes figures.
-* ` generate_results.py ` Runs the Monte Carlo simulations. The number of microlensing events is saved in each case.
-* `halomodel_optimised.py` Class describing the physical model underlying a microlensing survey, including the distance to the source stars, the model parameters used to describe the Galactic halo, the PBH mass and the number of PBHs per cluster.
-* ` expected_events_discrete_clustered.py ` Includes methods for calculating the number of events from a model microlensing survey.
-* ` produce_event_duration_distribution_smooth.py` Calculate the differential event rate for smoothly distributed DM, to provide a comparison to the clustered case. 
-* ` compute_smooth_mean.py` Calculate the number of expected microlensing events for smoothly distributed DM, to provide a comparison to the clustered case. 
-* ` plot_dgamma_v2.py ` Plots the differential event rate for smoothly-distributed DM and chosen realisations of the Monte Carlo simulations (see Fig. 1 of the paper).
+* `figures` Includes figures produced when running `plot_P_Nobs.py` and `plot_DER.py`.
+* ` generate_results.py ` Runs Monte Carlo simulations to simulate microlensing by clustered PBHs in different scenarios. One can control the value of the PBH mass, the number of PBHs per cluster, the fraction of dark matter in PBHs and the model survey. The number of microlensing events is saved in each case.
+* ` plot_dgamma.py ` Plots the differential event rate for smoothly-distributed DM and chosen realisations of the Monte Carlo simulations (see Fig. 1 of the paper).
 * ` plot_Nex.py ` Plots the probability distribution of the number of events against the number of events for smoothly-distributed DM and for clustered PBHs (see Fig. 2 of the paper).
 
 # Requirements
-Python 2.8
+Python 3
+
+# License
+This project is licensed under the MIT License - see the LICENSE.md file for details.
+
+
+### UserWarning: A NumPy version >=1.16.5 and <1.23.0 is required for this version of SciPy (detected version 1.24.3
 
